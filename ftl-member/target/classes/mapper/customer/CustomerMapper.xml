@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cm.cn.ftl.mapper.customer.CustomerMapper">
+	<!-- mysql -->
+	<resultMap type="Customer" id="cusMap">
+		<id property="id" column="id"/>
+		<result property="cusid" column="cusid"/>
+		<result property="cusname" column="cusname"/>
+		<result property="phone" column="phone"/>
+		<result property="address" column="address"/>
+		<result property="brithday" column="brithday"/>
+		<result property="email" column="email"/>
+		<result property="destric" column="destric"/>
+		<result property="updatetime" column="updatetime"/>
+		<result property="lasttime" column="lasttime"/>
+	</resultMap>
+	
+	<select id="getCustomerList" parameterType="map" resultMap="cusMap">
+		select * from sp_customer 
+		<trim prefix="where" prefixOverrides="AND|OR">
+			<if test="cusid != null and cusid != ''">
+				cusid = like CONCAT('%',#{cusid},'%')
+			</if>
+			<if test="cusname != null and cusname != ''">
+				cusname like CONCAT('%',#{cusname},'%')
+			</if>
+		</trim>
+		limit #{start},#{end}
+	</select>
+	
+	<select id="getCustomerListCount" parameterType="map" resultType="int">
+		select count(*) from sp_customer
+		<trim prefix="where" prefixOverrides="AND|OR">
+			<if test="cusid != null and cusid != ''">
+				cusid = like CONCAT('%',#{cusid},'%')
+			</if>
+			<if test="cusname != null and cusname != ''">
+				cusname = like CONCAT('%',#{cusname},'%')
+			</if>
+		</trim>
+	</select>
+	
+	<insert id="insertCust" parameterType="map" >
+		insert into sp_customer(
+			cusid,
+			cusname,
+			phone,
+			address,
+			brithday,
+			email,
+			destric,
+			updatetime,
+			lasttime
+		)values(
+			#{cusid},
+			#{cusname},
+			#{phone},
+			#{address},
+			#{brithday},
+			#{email},
+			#{destric},
+			sysdate(),
+			sysdate()
+		)
+	</insert>
+	<select id="getList" parameterType="string" resultMap="cusMap">
+		select * from sp_customer
+	</select>
+	<select id="select" parameterType="map" resultMap="cusMap">
+		select * from sp_customer where CUSID = 'A1001'
+	</select>
+</mapper> 
